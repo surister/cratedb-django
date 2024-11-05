@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'example.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'cratedb_django',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'SERVERS': ['localhost:4200']
     }
 }
 
