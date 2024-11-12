@@ -30,9 +30,13 @@ class DatabaseWrapper(BaseDatabaseWrapper):
     ops_class = DatabaseOperations
     SchemaEditorClass = DatabaseSchemaEditor
 
+    CRATE_SQL_SERIAL = 'TEXT GENERATED ALWAYS AS gen_random_text_uuid()'
     data_types = {
-        "AutoField": "integer",
-        "BigAutoField": "bigint",
+        # todo pgdiff - doc
+        "AutoField": CRATE_SQL_SERIAL,
+        "BigAutoField": CRATE_SQL_SERIAL,
+        "SmallAutoField": CRATE_SQL_SERIAL,
+
         "BinaryField": "bytea",
         "BooleanField": "boolean",
         "CharField": _get_varchar_column,
@@ -53,7 +57,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         "PositiveIntegerField": "integer",
         "PositiveSmallIntegerField": "smallint",
         "SlugField": "varchar(%(max_length)s)",
-        "SmallAutoField": "smallint",
+
         "SmallIntegerField": "smallint",
         "TextField": "text",
         "TimeField": "time",
