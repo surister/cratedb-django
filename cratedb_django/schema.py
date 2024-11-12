@@ -2,6 +2,19 @@ from django.db.backends.base.schema import BaseDatabaseSchemaEditor
 
 
 class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
-    def column_sql(self, model, field, include_default=False):
-        t = super().column_sql(model, field, include_default)
-        return t
+    sql_create_index = "SELECT 1"
+
+    def add_index(self, model, index):
+        return None
+
+    def rename_index(self, model, old_index, new_index):
+        return None
+
+    def remove_index(self, model, index):
+        return None
+
+    def add_constraint(self, model, constraint):
+        return None
+
+    def remove_constraint(self, model, constraint):
+        return None
