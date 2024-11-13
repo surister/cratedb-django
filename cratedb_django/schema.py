@@ -35,3 +35,15 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
 
     def remove_constraint(self, model, constraint):
         return None
+
+    def _model_indexes_sql(self, model):
+        """
+        todo pgdiff
+
+        This overload stops django from issuing CREATE INDEX statements.
+        https://forum.djangoproject.com/t/dont-issue-create-index-on-initial-migration/36227/4
+        """
+        return ()
+
+    def _alter_column_null_sql(self, model, old_field, new_field):
+        return ()
