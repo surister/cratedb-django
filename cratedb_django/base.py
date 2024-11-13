@@ -23,10 +23,26 @@ def _get_varchar_column(data):
     return "varchar(%(max_length)s)" % data
 
 
+class E(Exception):
+    pass
+
+
+class CrateError:
+    DataError = E
+    OperationalError = E
+    IntegrityError = E
+    InternalError = E
+    ProgrammingError = E
+    NotSupportedError = E
+    DatabaseError = E
+    InterfaceError = E
+    Error = E
+
+
 class DatabaseWrapper(BaseDatabaseWrapper):
     vendor = 'Crate.io'
     display_name = 'CrateDB'
-
+    Database = CrateError
     client_class = DatabaseClient
     creation_class = DatabaseCreation
     features_class = DatabaseFeatures
