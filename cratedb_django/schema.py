@@ -47,3 +47,8 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
 
     def _alter_column_null_sql(self, model, old_field, new_field):
         return ()
+
+    def column_sql(self, model, field, include_default=False):
+        field.unique = False
+        # todo pgdiff
+        return super().column_sql(model=model, field=field, include_default=include_default)
