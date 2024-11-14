@@ -9,5 +9,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     # Does the backend support indexes on expressions?
     supports_expression_indexes = False
 
+    supports_foreign_keys = False
+
     def supports_transactions(self):
         return False
