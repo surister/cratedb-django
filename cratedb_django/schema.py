@@ -52,3 +52,10 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
         field.unique = False
         # todo pgdiff
         return super().column_sql(model=model, field=field, include_default=include_default)
+
+    def alter_field(self, model, old_field, new_field, strict=False):
+        if old_field.get_internal_type != new_field.get_internal_type:
+            # You cannot change types after table creation.
+            return
+
+        return super().alter_field(model, old_field, new_field, strict)
