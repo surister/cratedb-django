@@ -10,6 +10,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_expression_indexes = False
 
     supports_foreign_keys = False
+    supports_comments = False
 
     def supports_transactions(self):
         return False
