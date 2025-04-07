@@ -115,7 +115,6 @@ class DatabaseWrapper(BaseDatabaseWrapper):
             raise ImproperlyConfigured(
                 "Do not use 'PORT' nor 'HOST' in settings.databases, user 'SERVERS'"
             )
-
         return conn_params
 
     def get_new_connection(self, conn_params):
@@ -126,6 +125,18 @@ class DatabaseWrapper(BaseDatabaseWrapper):
 
 
 FORMAT_QMARK_REGEX = _lazy_re_compile(r"(?<!%)%s")
+
+
+def refresh_after_insert_to(table_list: list[str]):
+    def deco(f):
+        def wrapper(*args, **kwargs):
+            func = f(*args, **kwargs)
+            for table in table_list:
+                if f'INSERT INTO "{table}"' in args[1]:
+                    return args[0].execute(f'refresh table {table}', None)
+            return func
+        return wrapper
+    return deco
 
 
 # Inspired by SQLITE driver
@@ -142,6 +153,18 @@ class CrateDBCursorWrapper(Cursor):
     In both cases, if you want to use a literal "%s", you'll need to use "%%s".
     """
 
+    @refresh_after_insert_to([
+        'django_migrations',
+        'django_admin_log',
+        'django_content_type',
+        'django_session',
+
+        'auth_user_groups',
+        'auth_permission',
+        'auth_group',
+        'auth_user',
+        'auth_group_permissions',
+    ])
     def execute(self, query, params=None):
         if params is None:
             return super().execute(query)
