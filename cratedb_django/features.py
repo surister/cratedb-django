@@ -12,5 +12,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_foreign_keys = False
     supports_comments = False
 
+    can_rollback_ddl = False
+
     def supports_transactions(self):
         return False
