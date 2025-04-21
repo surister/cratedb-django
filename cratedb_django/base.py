@@ -101,6 +101,12 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         "iendswith": "LIKE UPPER(%s)",
     }
 
+    def rollback(self):
+        return
+
+    def savepoint(self):
+        return
+
     def _set_autocommit(self, autocommit):
         with self.wrap_database_errors:
             self.connection.autocommit = autocommit
@@ -171,6 +177,8 @@ class CrateDBCursorWrapper(Cursor):
         # Extract names if params is a mapping, i.e. "pyformat" style is used.
         param_names = list(params) if isinstance(params, Mapping) else None
         query = self.convert_query(query, param_names=param_names)
+        print('running query')
+
         return super().execute(query, params)
 
     def executemany(self, query, param_list):
@@ -182,6 +190,8 @@ class CrateDBCursorWrapper(Cursor):
         else:
             param_names = None
         query = self.convert_query(query, param_names=param_names)
+        print('running query')
+
         return super().executemany(query, param_list)
 
     def convert_query(self, query, *, param_names=None):
