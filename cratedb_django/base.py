@@ -60,7 +60,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         "BinaryField": "bytea",
         "BooleanField": "boolean",
         "CharField": _get_varchar_column,
-        "DateField": "date",
+        "DateField": "timestamp with time zone",
         "DateTimeField": "timestamp with time zone",
         "DecimalField": "numeric(%(max_digits)s, %(decimal_places)s)",
         "DurationField": "interval",
@@ -81,7 +81,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         "SmallIntegerField": "smallint",
         "TextField": "text",
         "TimeField": "time",
-        "UUIDField": "uuid",
+        "UUIDField": "text",
     }
 
     operators = {
