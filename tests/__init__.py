@@ -1,5 +1,5 @@
 from django.test.testcases import TransactionTestCase
 
-class NoTransactionTestCase(NoTransactionTestCase):
+class NoTransactionTestCase(TransactionTestCase):
     """Rename to a more descriptive class."""
     pass
