@@ -1,3 +1,6 @@
+import logging
+import os
+
 from django.db.backends.base.schema import BaseDatabaseSchemaEditor
 
 
@@ -49,13 +52,18 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
         return ()
 
     def column_sql(self, model, field, include_default=False):
-        field.unique = False
-        # todo pgdiff
+        if field.unique:
+            # todo pgdiff
+            if not os.getenv('SUPPRESS_UNIQUE_CONSTRAINT_WARNING', 'false') == 'true':
+                logging.warning(
+                    f'CrateDB does not support unique constraints but `{model}.{field}` is set as'
+                    f' unique=True, it will be ignored.'
+                )
+            field.unique = False
         return super().column_sql(model=model, field=field, include_default=include_default)
 
     def alter_field(self, model, old_field, new_field, strict=False):
         if old_field.get_internal_type != new_field.get_internal_type:
             # You cannot change types after table creation.
             return
-
         return super().alter_field(model, old_field, new_field, strict)
