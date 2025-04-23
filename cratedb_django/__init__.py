@@ -8,6 +8,7 @@ class CrateModel(models.Model):
     Methods:
         refresh: Refreshes the given model (table)
     """
+
     @classmethod
     def refresh(cls):
         with connection.cursor() as cursor:

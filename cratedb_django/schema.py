@@ -11,9 +11,8 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
 
     # TODO pgdiff
     # TODO, is this bug? why isn't supports_deferrable_unique_constraints respected on table creation?
-    # create table contentypes to reproduce
 
-    sql_create_unique = ('select 1')
+    sql_create_unique = "select 1"
 
     sql_alter_column_type = "SELECT 1"
     sql_alter_column_null = "SELECT 2"
@@ -54,13 +53,15 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
     def column_sql(self, model, field, include_default=False):
         if field.unique:
             # todo pgdiff
-            if not os.getenv('SUPPRESS_UNIQUE_CONSTRAINT_WARNING', 'false') == 'true':
+            if not os.getenv("SUPPRESS_UNIQUE_CONSTRAINT_WARNING", "false") == "true":
                 logging.warning(
-                    f'CrateDB does not support unique constraints but `{model}.{field}` is set as'
-                    f' unique=True, it will be ignored.'
+                    f"CrateDB does not support unique constraints but `{model}.{field}` is set as"
+                    f" unique=True, it will be ignored."
                 )
             field.unique = False
-        return super().column_sql(model=model, field=field, include_default=include_default)
+        return super().column_sql(
+            model=model, field=field, include_default=include_default
+        )
 
     def alter_field(self, model, old_field, new_field, strict=False):
         if old_field.get_internal_type != new_field.get_internal_type:

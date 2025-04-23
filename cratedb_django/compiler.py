@@ -1,7 +1,14 @@
-from django.db.models.sql.compiler import SQLCompiler # noqa -- Import needed for re-imports.
+from django.db.models.sql.compiler import (
+    SQLCompiler,
+)  # noqa -- Import needed for re-imports.
 
-from django.db.models.sql.compiler import SQLInsertCompiler, SQLUpdateCompiler, \
-    SQLAggregateCompiler, SQLDeleteCompiler, SQLCompiler
+from django.db.models.sql.compiler import (
+    SQLInsertCompiler,
+    SQLUpdateCompiler,
+    SQLAggregateCompiler,
+    SQLDeleteCompiler,
+    SQLCompiler,
+)
 
 
 class SQLInsertCompiler(SQLInsertCompiler):

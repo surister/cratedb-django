@@ -41,8 +41,8 @@ class CrateError:
 
 
 class DatabaseWrapper(BaseDatabaseWrapper):
-    vendor = 'Crate.io'
-    display_name = 'CrateDB'
+    vendor = "Crate.io"
+    display_name = "CrateDB"
     Database = CrateError
     client_class = DatabaseClient
     creation_class = DatabaseCreation
@@ -51,13 +51,12 @@ class DatabaseWrapper(BaseDatabaseWrapper):
     ops_class = DatabaseOperations
     SchemaEditorClass = DatabaseSchemaEditor
 
-    CRATE_SQL_SERIAL = 'INTEGER GENERATED ALWAYS AS CAST((random() * 1.0E9) AS integer)'
+    CRATE_SQL_SERIAL = "INTEGER GENERATED ALWAYS AS CAST((random() * 1.0E9) AS integer)"
     data_types = {
         # todo pgdiff - doc
         "AutoField": CRATE_SQL_SERIAL,
         "BigAutoField": CRATE_SQL_SERIAL,
         "SmallAutoField": CRATE_SQL_SERIAL,
-
         "BinaryField": "bytea",
         "BooleanField": "boolean",
         "CharField": _get_varchar_column,
@@ -78,7 +77,6 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         "PositiveIntegerField": "integer",
         "PositiveSmallIntegerField": "smallint",
         "SlugField": "varchar(%(max_length)s)",
-
         "SmallIntegerField": "smallint",
         "TextField": "text",
         "TimeField": "time",
@@ -113,7 +111,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
             self.connection.autocommit = autocommit
 
     def get_connection_params(self):
-        conn_params = dict(servers=self.settings_dict.get('SERVERS'))
+        conn_params = dict(servers=self.settings_dict.get("SERVERS"))
 
         if self.settings_dict["HOST"]:
             conn_params["servers"] = [self.settings_dict["HOST"]]
@@ -140,9 +138,11 @@ def refresh_after_insert_to(table_list: list[str]):
             func = f(*args, **kwargs)
             for table in table_list:
                 if f'INSERT INTO "{table}"' in args[1]:
-                    return args[0].execute(f'refresh table {table}', None)
+                    return args[0].execute(f"refresh table {table}", None)
             return func
+
         return wrapper
+
     return deco
 
 
@@ -160,25 +160,26 @@ class CrateDBCursorWrapper(Cursor):
     In both cases, if you want to use a literal "%s", you'll need to use "%%s".
     """
 
-    @refresh_after_insert_to([
-        'django_migrations',
-        'django_admin_log',
-        'django_content_type',
-        'django_session',
-
-        'auth_user_groups',
-        'auth_permission',
-        'auth_group',
-        'auth_user',
-        'auth_group_permissions',
-    ])
+    @refresh_after_insert_to(
+        [
+            "django_migrations",
+            "django_admin_log",
+            "django_content_type",
+            "django_session",
+            "auth_user_groups",
+            "auth_permission",
+            "auth_group",
+            "auth_user",
+            "auth_group_permissions",
+        ]
+    )
     def execute(self, query, params=None):
         if params is None:
             return super().execute(query)
         # Extract names if params is a mapping, i.e. "pyformat" style is used.
         param_names = list(params) if isinstance(params, Mapping) else None
         query = self.convert_query(query, param_names=param_names)
-        logging.debug(f'sent query: ', query)
+        logging.debug(f"sent query: ", query)
         return super().execute(query, params)
 
     def executemany(self, query, param_list):
@@ -190,7 +191,7 @@ class CrateDBCursorWrapper(Cursor):
         else:
             param_names = None
         query = self.convert_query(query, param_names=param_names)
-        logging.debug(f'sent query: ', query)
+        logging.debug(f"sent query: ", query)
         return super().executemany(query, param_list)
 
     def convert_query(self, query, *, param_names=None):

@@ -10,4 +10,4 @@ class DatabaseOperations(BaseDatabaseOperations):
         return f'"{name}"'
 
     def sql_flush(self, style, tables, *, reset_sequences=False, allow_cascade=False):
-        return [f'DELETE FROM {table}' for table in tables]
+        return [f"DELETE FROM {table}" for table in tables]
