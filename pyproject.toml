@@ -1,20 +1,38 @@
 [project]
 name = "cratedb-django"
-version = "0.1.0"
+version = "0.0.0" # The Version is updated in the CI workflow.
 description = ""
-authors = [{ name = "surister", email = "surister98@gmail.com" }]
-requires-python = "~=3.12"
+authors = [{ name = "Ivan", email = "surister98@gmail.com" }]
+requires-python = ">=3.10"
 readme = "README.md"
+license = { file = "LICENSE.md"}
+classifiers = [
+    "Framework :: Django",
+    "Topic :: Database",
+    "Topic :: Database :: Front-Ends",
+    "Natural Language :: English",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+]
 dependencies = [
     "crate>=0.35.2,<0.36",
     "django>=5.2",
 ]
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [dependency-groups]
 dev = [
+    "black>=25.1.0",
+    "pytest-cratedb>=0.4.0",
     "requests>=2.32.3",
 ]
+
+[project.urls]
+"Home Page" = "https://github.com/surister/cratedb-django"
+DOCUMENTATION = "https://github.com/surister/cratedb-django"
+Repository = "https://github.com/surister/cratedb-django.git"
+GitHub = "https://github.com/surister/cratedb-django"
+Changelog = "https://github.com/surister/cratedb-django/releases"
