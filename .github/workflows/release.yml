@@ -1,0 +1,34 @@
+name: 📦🐍 Build and Release Python package
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: python
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      # IMPORTANT: this permission is mandatory for Trusted Publishing
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Set project version
+        run: |
+          sed -i -E "s/^version = \".*\"/version = \"${GITHUB_REF#refs/*/v}\"/" pyproject.toml
+          cat pyproject.toml
+
+      - name: Build
+        run: uv build
+
+      - name: Upload
+        run: uv publish
