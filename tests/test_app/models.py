@@ -48,3 +48,11 @@ class SimpleModel(CrateModel):
 
     class Meta:
         app_label = "test_app"
+
+
+class RefreshModel(CrateModel):
+    field2 = models.TextField()
+
+    class Meta:
+        app_label = "test_app"
+        auto_refresh = True

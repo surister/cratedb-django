@@ -1,6 +1,13 @@
 from django.forms.models import model_to_dict
-from tests.test_app.models import AllFieldsModel, SimpleModel
+from tests.test_app.models import AllFieldsModel, SimpleModel, RefreshModel
+from django.db import connection
+from django.test.utils import CaptureQueriesContext
 
+def test_refresh():
+    """Test that Model.refresh() works"""
+    with CaptureQueriesContext(connection) as ctx:
+        RefreshModel.refresh()
+        assert 'refresh table test_app_refreshmodel' in ctx.captured_queries[0]['sql']
 
 def test_insert_model_field():
     """Test that we can insert a model and refresh it"""
