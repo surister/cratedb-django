@@ -141,6 +141,7 @@ def refresh_after_insert_to(table_list: list[str]):
     Note: Only works for `INSERTS`, it might be necessary to also add 'DELETE' and 'UPDATE'.
 
     """
+
     def deco(f):
         def wrapper(*args, **kwargs):
             func = f(*args, **kwargs)
@@ -148,7 +149,9 @@ def refresh_after_insert_to(table_list: list[str]):
                 if f'INSERT INTO "{table}"' in args[1]:
                     return args[0].execute(f"refresh table {table}", None)
             return func
+
         return wrapper
+
     return deco
 
 
@@ -164,6 +167,7 @@ class CrateDBCursorWrapper(Cursor):
 
     In both cases, if you want to use a literal "%s", you'll need to use "%%s".
     """
+
     # todo pgdiff
     @refresh_after_insert_to(
         [

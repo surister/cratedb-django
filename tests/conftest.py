@@ -45,7 +45,7 @@ def clean_database(request):
             cursor.execute(f"REFRESH TABLE {model._meta.db_table}")
 
 
-@pytest.fixture(scope="session", autouse=False)
+@pytest.fixture(scope="function", autouse=False)
 def cleanup_migrations(request):
     """
     Removes every table created from the migrations, not necessary in CI but very useful

@@ -9,5 +9,7 @@ class DatabaseOperations(BaseDatabaseOperations):
             return name  # Quoting once is enough.
         return f'"{name}"'
 
-    def sql_flush(self, style, tables, *, reset_sequences=False, allow_cascade=False) -> list[str]:
+    def sql_flush(
+        self, style, tables, *, reset_sequences=False, allow_cascade=False
+    ) -> list[str]:
         return [f"DELETE FROM {table}" for table in tables]
