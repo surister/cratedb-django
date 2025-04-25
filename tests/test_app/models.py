@@ -51,7 +51,7 @@ class SimpleModel(CrateModel):
 
 
 class RefreshModel(CrateModel):
-    field2 = models.TextField()
+    field = models.TextField()
 
     class Meta:
         app_label = "test_app"

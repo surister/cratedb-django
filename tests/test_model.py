@@ -3,11 +3,32 @@ from tests.test_app.models import AllFieldsModel, SimpleModel, RefreshModel
 from django.db import connection
 from django.test.utils import CaptureQueriesContext
 
-def test_refresh():
+
+def test_model_refresh():
     """Test that Model.refresh() works"""
     with CaptureQueriesContext(connection) as ctx:
-        RefreshModel.refresh()
-        assert 'refresh table test_app_refreshmodel' in ctx.captured_queries[0]['sql']
+        SimpleModel.refresh()
+        assert "refresh table test_app_simplemodel" in ctx.captured_queries[0]["sql"]
+
+
+def test_model_refresh_meta():
+    with CaptureQueriesContext(connection) as ctx:
+        # Test insert
+        RefreshModel.objects.create(field="sometext")
+        assert (
+            "refresh table test_app_refreshmodel"
+            in ctx.captured_queries[len(ctx.captured_queries) - 1]["sql"]
+        )
+
+        # Test update
+        obj = RefreshModel.objects.get()
+        obj.field = "newvalue"
+        obj.save()
+        assert (
+            "refresh table test_app_refreshmodel"
+            in ctx.captured_queries[len(ctx.captured_queries) - 1]["sql"]
+        )
+
 
 def test_insert_model_field():
     """Test that we can insert a model and refresh it"""
