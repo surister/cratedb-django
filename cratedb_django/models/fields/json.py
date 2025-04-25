@@ -1,7 +1,7 @@
-from django.db import models
+from django.db.models import JSONField
 
 
-class ObjectField(models.JSONField):
+class ObjectField(JSONField):
     def from_db_value(self, value, expression, connection):
         return value
 
