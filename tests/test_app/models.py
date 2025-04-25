@@ -2,8 +2,8 @@ import datetime, uuid
 
 from django.db import models
 
-from cratedb_django import CrateModel
-from cratedb_django.models import ObjectField
+from cratedb_django.fields import ObjectField
+from cratedb_django.models import CrateModel
 
 
 class AllFieldsModel(CrateModel):

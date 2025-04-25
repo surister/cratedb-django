@@ -27,7 +27,9 @@ logging.info("All migrations run successfully")
 
 @pytest.fixture(scope="function", autouse=True)
 def clean_database(request):
-    """After every test removes all the rows inserted in the model."""
+    """
+    After every test removes all the rows inserted in the table.
+    """
 
     yield
 
@@ -36,6 +38,7 @@ def clean_database(request):
         for model in request.module.__dict__.values()
         if isinstance(model, django.db.models.base.ModelBase)
     ]
+
     for model in models:
         with connection.cursor() as cursor:
             cursor.execute(f"DELETE FROM {model._meta.db_table}")
@@ -43,7 +46,7 @@ def clean_database(request):
 
 
 @pytest.fixture(scope="session", autouse=False)
-def cleanup_migrations():
+def cleanup_migrations(request):
     """
     Removes every table created from the migrations, not necessary in CI but very useful
     in local while debugging migrations and model field creations, set autouse=True to use it.

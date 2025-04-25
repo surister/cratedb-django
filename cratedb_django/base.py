@@ -5,6 +5,7 @@ from itertools import tee
 from crate.client.converter import DefaultTypeConverter
 from crate.client.cursor import Cursor
 from crate.client.connection import Connection
+
 from django.core.exceptions import ImproperlyConfigured
 
 from django.db.backends.base.base import BaseDatabaseWrapper
@@ -134,6 +135,12 @@ FORMAT_QMARK_REGEX = _lazy_re_compile(r"(?<!%)%s")
 
 
 def refresh_after_insert_to(table_list: list[str]):
+    """
+    Runs a 'refresh table {table_name}' query if the argument contains an 'INSERT'.
+
+    Note: Only works for `INSERTS`, it might be necessary to also add 'DELETE' and 'UPDATE'.
+
+    """
     def deco(f):
         def wrapper(*args, **kwargs):
             func = f(*args, **kwargs)
@@ -141,17 +148,14 @@ def refresh_after_insert_to(table_list: list[str]):
                 if f'INSERT INTO "{table}"' in args[1]:
                     return args[0].execute(f"refresh table {table}", None)
             return func
-
         return wrapper
-
     return deco
 
 
 # Inspired by SQLITE driver
 class CrateDBCursorWrapper(Cursor):
     """
-    Django uses the "format" and "pyformat" styles, but Python's sqlite3 module
-    supports neither of these styles.
+    Django uses the "format" and "pyformat" styles, but CrateDB uses '?' question mark.
 
     This wrapper performs the following conversions:
 
@@ -160,7 +164,7 @@ class CrateDBCursorWrapper(Cursor):
 
     In both cases, if you want to use a literal "%s", you'll need to use "%%s".
     """
-
+    # todo pgdiff
     @refresh_after_insert_to(
         [
             "django_migrations",

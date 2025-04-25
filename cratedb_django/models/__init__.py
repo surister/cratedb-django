@@ -1,3 +1,3 @@
-from .fields.json import ObjectField
+from .model import CrateModel
 
-__all__ = ["ObjectField"]
+__all__ = ['CrateModel']
