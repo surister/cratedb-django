@@ -11,7 +11,7 @@ Connector to use CrateDB as a database in Django ORM.
 ## How to install
 uv
 ```shell
-uv pip add cratedb-django
+uv add cratedb-django
 ```
 pipx
 ```shell
