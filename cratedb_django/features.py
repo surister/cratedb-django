@@ -13,6 +13,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     supports_comments = False
 
     can_rollback_ddl = False
+    can_return_columns_from_insert = True
 
     def supports_transactions(self):
         return False

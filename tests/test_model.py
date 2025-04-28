@@ -11,6 +11,14 @@ def test_model_refresh():
         assert "refresh table test_app_simplemodel" in ctx.captured_queries[0]["sql"]
 
 
+def test_model_auto_pk_value_exists():
+    """Test that when we create a model object with Django created 'id', the value gets added to the Object"""
+    obj = SimpleModel.objects.create(field="yo")
+    assert obj.id
+    assert obj.pk
+    assert obj.id == obj.pk
+    assert isinstance(obj.id, int)
+
 def test_model_refresh_meta():
     with CaptureQueriesContext(connection) as ctx:
         # Test insert
