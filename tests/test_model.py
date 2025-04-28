@@ -3,6 +3,8 @@ from tests.test_app.models import AllFieldsModel, SimpleModel, RefreshModel
 from django.db import connection
 from django.test.utils import CaptureQueriesContext
 
+from tests.utils import captured_queries
+
 
 def test_model_refresh():
     """Test that Model.refresh() works"""
@@ -20,30 +22,31 @@ def test_model_auto_pk_value_exists():
     assert isinstance(obj.id, int)
 
 def test_model_refresh_meta():
-    with CaptureQueriesContext(connection) as ctx:
+    """ Test that a refresh statement is sent after updating or inserting when auto_refresh=True in Meta"""
+    with captured_queries(connection) as ctx:
         # Test insert
         RefreshModel.objects.create(field="sometext")
-        assert (
-            "refresh table test_app_refreshmodel"
-            in ctx.captured_queries[len(ctx.captured_queries) - 1]["sql"]
-        )
+        assert ctx.latest_query.stmt == 'refresh table test_app_refreshmodel'
 
         # Test update
         obj = RefreshModel.objects.get()
         obj.field = "newvalue"
         obj.save()
-        assert (
-            "refresh table test_app_refreshmodel"
-            in ctx.captured_queries[len(ctx.captured_queries) - 1]["sql"]
-        )
+        assert ctx.latest_query.stmt == 'refresh table test_app_refreshmodel'
 
 
 def test_insert_model_field():
     """Test that we can insert a model and refresh it"""
-    assert SimpleModel.objects.count() == 0
-    SimpleModel.objects.create(field="text")
-    SimpleModel.refresh()
-    assert SimpleModel.objects.count() == 1
+
+    with captured_queries(connection) as ctx:
+        assert SimpleModel.objects.count() == 0
+        SimpleModel.objects.create(field="text")
+        assert 'INSERT INTO "test_app_simplemodel"' in ctx.latest_query.stmt
+
+        SimpleModel.refresh()
+
+        assert ctx.latest_query.stmt == 'refresh table test_app_simplemodel'
+        assert SimpleModel.objects.count() == 1
 
 
 def test_insert_all_fields():
