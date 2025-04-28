@@ -139,7 +139,6 @@ def refresh_after_insert_to(table_list: list[str]):
     Runs a 'refresh table {table_name}' query if the argument contains an 'INSERT'.
 
     Note: Only works for `INSERTS`, it might be necessary to also add 'DELETE' and 'UPDATE'.
-
     """
 
     def deco(f):
@@ -149,9 +148,7 @@ def refresh_after_insert_to(table_list: list[str]):
                 if f'INSERT INTO "{table}"' in args[1]:
                     return args[0].execute(f"refresh table {table}", None)
             return func
-
         return wrapper
-
     return deco
 
 
@@ -169,19 +166,19 @@ class CrateDBCursorWrapper(Cursor):
     """
 
     # todo pgdiff
-    @refresh_after_insert_to(
-        [
-            "django_migrations",
-            "django_admin_log",
-            "django_content_type",
-            "django_session",
-            "auth_user_groups",
-            "auth_permission",
-            "auth_group",
-            "auth_user",
-            "auth_group_permissions",
-        ]
-    )
+    # @refresh_after_insert_to(
+    #     [
+    #         "django_migrations",
+    #         "django_admin_log",
+    #         "django_content_type",
+    #         "django_session",
+    #         "auth_user_groups",
+    #         "auth_permission",
+    #         "auth_group",
+    #         "auth_user",
+    #         "auth_group_permissions",
+    #     ]
+    # )
     def execute(self, query, params=None):
         if params is None:
             return super().execute(query)
