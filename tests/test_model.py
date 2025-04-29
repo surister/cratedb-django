@@ -35,6 +35,16 @@ def test_model_refresh_meta():
         assert ctx.latest_query.stmt == 'refresh table test_app_refreshmodel'
 
 
+def test_model_auto_pk_value_exists():
+    """Test that when we create a model object with Django created 'id', the value gets added to the Object"""
+    obj = SimpleModel.objects.create(field="test_model_auto_pk_value_exists")
+    SimpleModel.refresh()
+    assert obj.id
+    assert obj.pk
+    assert obj.id == obj.pk
+    assert isinstance(obj.id, int)
+
+
 def test_insert_model_field():
     """Test that we can insert a model and refresh it"""
 
