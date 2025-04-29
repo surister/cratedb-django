@@ -44,7 +44,6 @@ def clean_database(request):
             cursor.execute(f"DELETE FROM {model._meta.db_table}")
             cursor.execute(f"REFRESH TABLE {model._meta.db_table}")
 
-
 @pytest.fixture(scope="function", autouse=False)
 def cleanup_migrations(request):
     """
