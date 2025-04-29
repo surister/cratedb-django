@@ -1,4 +1,5 @@
 import logging
+import re
 from collections.abc import Mapping
 from itertools import tee
 
@@ -134,19 +135,19 @@ class DatabaseWrapper(BaseDatabaseWrapper):
 FORMAT_QMARK_REGEX = _lazy_re_compile(r"(?<!%)%s")
 
 
-def refresh_after_insert_to(table_list: list[str]):
+def aggressively_refresh():
     """
-    Runs a 'refresh table {table_name}' query if the argument contains an 'INSERT'.
-
-    Note: Only works for `INSERTS`, it might be necessary to also add 'DELETE' and 'UPDATE'.
+    Runs a refresh table statement on update statements
     """
-
     def deco(f):
         def wrapper(*args, **kwargs):
             func = f(*args, **kwargs)
-            for table in table_list:
-                if f'INSERT INTO "{table}"' in args[1]:
-                    return args[0].execute(f"refresh table {table}", None)
+
+            query = args[1].lower()
+            match = re.search(r'update\s+([^\s;]+)', query, re.IGNORECASE)
+            if match:
+                table_name = match.group(1)
+                return args[0].execute(f"refresh table {table_name}", None)
             return func
         return wrapper
     return deco
@@ -166,26 +167,14 @@ class CrateDBCursorWrapper(Cursor):
     """
 
     # todo pgdiff
-    # @refresh_after_insert_to(
-    #     [
-    #         "django_migrations",
-    #         "django_admin_log",
-    #         "django_content_type",
-    #         "django_session",
-    #         "auth_user_groups",
-    #         "auth_permission",
-    #         "auth_group",
-    #         "auth_user",
-    #         "auth_group_permissions",
-    #     ]
-    # )
+    @aggressively_refresh()
     def execute(self, query, params=None):
         if params is None:
             return super().execute(query)
         # Extract names if params is a mapping, i.e. "pyformat" style is used.
         param_names = list(params) if isinstance(params, Mapping) else None
         query = self.convert_query(query, param_names=param_names)
-        logging.debug(f"sent query: {query}")
+        logging.warning(f"sent query: {query}, {params}")
         return super().execute(query, params)
 
     def executemany(self, query, param_list):
@@ -197,7 +186,7 @@ class CrateDBCursorWrapper(Cursor):
         else:
             param_names = None
         query = self.convert_query(query, param_names=param_names)
-        logging.debug(f"sent query: {query}")
+        logging.warning(f"sent query: {query}")
         return super().executemany(query, param_list)
 
     def convert_query(self, query, *, param_names=None):
