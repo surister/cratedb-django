@@ -139,17 +139,20 @@ def aggressively_refresh():
     """
     Runs a refresh table statement on update statements
     """
+
     def deco(f):
         def wrapper(*args, **kwargs):
             func = f(*args, **kwargs)
 
             query = args[1].lower()
-            match = re.search(r'update\s+([^\s;]+)', query, re.IGNORECASE)
+            match = re.search(r"update\s+([^\s;]+)", query, re.IGNORECASE)
             if match:
                 table_name = match.group(1)
                 return args[0].execute(f"refresh table {table_name}", None)
             return func
+
         return wrapper
+
     return deco
 
 

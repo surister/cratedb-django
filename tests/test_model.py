@@ -16,11 +16,11 @@ def test_model_refresh():
 
 
 def test_model_refresh_meta():
-    """ Test that a refresh statement is sent after updating or inserting when auto_refresh=True in Meta"""
+    """Test that a refresh statement is sent after updating or inserting when auto_refresh=True in Meta"""
     with captured_queries(connection) as ctx:
         # Test insert
         RefreshModel.objects.create(field="sometext")
-        assert ctx.latest_query.stmt == 'refresh table test_app_refreshmodel'
+        assert ctx.latest_query.stmt == "refresh table test_app_refreshmodel"
 
 
 def test_model_auto_pk_value_exists():
@@ -48,16 +48,17 @@ def test_update_model():
     with captured_queries(connection) as ctx:
         obj = SimpleModel.objects.create(field="text")
         pk = obj.pk
-        assert obj.field == 'text'
+        assert obj.field == "text"
 
-        obj.field = 'sometext'
+        obj.field = "sometext"
         obj.save()
 
         pprint.pp(ctx.captured_queries)
 
-        assert obj.field == 'sometext'
-        assert pk == obj.pk # Pk did not change
+        assert obj.field == "sometext"
+        assert pk == obj.pk  # Pk did not change
         assert SimpleModel.objects.count() == 1
+
 
 def test_insert_all_fields():
     """Test that an object is created and accounted for with all supported field types"""

@@ -2,6 +2,7 @@ import dataclasses
 
 from django.test.utils import CaptureQueriesContext
 
+
 @dataclasses.dataclass
 class CapturedQuery:
     _original_query: dict = dataclasses.field(repr=False)
@@ -10,13 +11,14 @@ class CapturedQuery:
     time: str = dataclasses.field(init=False)
 
     def __post_init__(self):
-        _parts = self._original_query['sql'].split('-')
-        self.stmt = _parts[0].split('=')[1].strip().replace("'", "")
-        self.params = _parts[1].split('=')[1].strip()
-        self.time = self._original_query['time']
+        _parts = self._original_query["sql"].split("-")
+        self.stmt = _parts[0].split("=")[1].strip().replace("'", "")
+        self.params = _parts[1].split("=")[1].strip()
+        self.time = self._original_query["time"]
 
     def is_insert(self):
-        return 'insert' in self.stmt.lower()
+        return "insert" in self.stmt.lower()
+
 
 class captured_queries(CaptureQueriesContext):
     @property
