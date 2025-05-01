@@ -114,7 +114,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
 
     def _set_autocommit(self, autocommit):
         with self.wrap_database_errors:
-            self.connection.autocommit = False # Forcibly set autocommit to False.
+            self.connection.autocommit = False  # Forcibly set autocommit to False.
 
     def get_connection_params(self):
         conn_params = dict(servers=self.settings_dict.get("SERVERS"))

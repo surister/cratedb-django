@@ -70,9 +70,9 @@ def test_delete_from_model():
         SimpleModel.objects.all().delete()
         assert ctx.latest_query.stmt == 'DELETE FROM "test_app_simplemodel"'
 
-
         SimpleModel.refresh()
         assert SimpleModel.objects.count() == 0
+
 
 def test_insert_all_fields():
     """Test that an object is created and accounted for with all supported field types"""

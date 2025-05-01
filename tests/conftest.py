@@ -40,7 +40,7 @@ def clean_database(request):
     ]
 
     for model in models:
-        if model._meta.app_label != 'ignore':
+        if model._meta.app_label != "ignore":
             with connection.cursor() as cursor:
                 cursor.execute(f"DELETE FROM {model._meta.db_table}")
                 cursor.execute(f"REFRESH TABLE {model._meta.db_table}")
