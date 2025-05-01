@@ -6,8 +6,7 @@ from django.db.models.sql.compiler import (
     SQLInsertCompiler,
     SQLUpdateCompiler,
     SQLAggregateCompiler,
-    SQLDeleteCompiler,
-    SQLCompiler,
+    SQLDeleteCompiler
 )
 
 
