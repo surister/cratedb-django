@@ -3,6 +3,7 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/cratedb-django)
 ![PyPI - License](https://img.shields.io/pypi/l/cratedb-django)
 ![PyPI - Status](https://img.shields.io/pypi/status/cratedb-django)
+[![🛠🐍 Unit tests](https://github.com/surister/cratedb-django/actions/workflows/tests.yml/badge.svg)](https://github.com/surister/cratedb-django/actions/workflows/tests.yml)
 
 Connector to use CrateDB as a database in Django ORM.
 
