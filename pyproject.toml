@@ -34,7 +34,7 @@ dev = [
 
 [project.urls]
 "Home Page" = "https://github.com/surister/cratedb-django"
-DOCUMENTATION = "https://github.com/surister/cratedb-django"
+Documentation = "https://github.com/surister/cratedb-django"
 Repository = "https://github.com/surister/cratedb-django.git"
 GitHub = "https://github.com/surister/cratedb-django"
 Changelog = "https://github.com/surister/cratedb-django/releases"
